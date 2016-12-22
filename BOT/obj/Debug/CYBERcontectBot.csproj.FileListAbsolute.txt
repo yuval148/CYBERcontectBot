@@ -1,0 +1,6 @@
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\bin\Debug\CYBERcontectBot.dll
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\bin\Debug\CYBERcontectBot.pdb
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\bin\Debug\PirateGame.dll
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\obj\Debug\CYBERcontectBot.csprojResolveAssemblyReference.cache
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\obj\Debug\CYBERcontectBot.dll
+C:\Users\cu2\Desktop\CYBERcontectBot\BOT\obj\Debug\CYBERcontectBot.pdb

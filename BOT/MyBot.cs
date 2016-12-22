@@ -1,28 +1,31 @@
 ﻿using System.Collections.Generic;
 using Pirates;
+using System.Linq;
 
 namespace MyBot
 {
     public class MyBot : Pirates.IPirateBot
     {
-        private List<Location> ClosestCity(PirateGame game)
+        private List<Island> SortIsland(PirateGame game, City city)
         {
-            List<Location> loc = new List<Location>();
-            for (int i = 0; i < game.GetMyCities().Count; i++)
+            List<Island> islands = game.GetAllIslands();
+            List<Island> New = new List<Island>();
+            Island min = islands[0];
+            for (int j = 0; j < islands.Count; j++)
             {
-                Location Min = game.GetAllIslands()[0].Location;
-                for (int v = 0; v < game.GetAllIslands().Count; v++)
+                for (int i = 0; i < islands.Count; i++)
                 {
-                    if (game.GetMyCities()[i].Distance(game.GetAllIslands()[v]) < game.GetMyCities()[i].Distance(Min))
+                    if (min.Distance(city) >= islands[i].Distance(city))
                     {
-                        Min = game.GetAllIslands()[v].Location;
+                        min = islands[i];
                     }
                 }
-                loc.Add(Min);
+                New.Add(min);
+                islands.Remove(min);
             }
-            return loc;
+            New.Add(islands[0]);
+            return New;
         }
-
         private List<Location> ClosestCityEnemy(PirateGame game)
         {
             List<Location> loc = new List<Location>();
@@ -43,25 +46,33 @@ namespace MyBot
         private void HandlePirates(PirateGame game)
         {
             List<Pirate> LivingPirates = game.GetMyLivingPirates();
-            for (int j = 0; j < game.GetMyCities().Count; j++)
+            List<City> Cities = game.GetMyCities();
+            for (int j = 0; j < Cities.Count; j++)
             {
+                int count = game.GetAllIslands().Count; int x = 0;
+                Island destination = SortIsland(game, Cities[j])[x];
                 for (int i = 0; i < LivingPirates.Count; i++)
                 {
-                    if (!TryAttack(LivingPirates[i], game))
+                    if (!TryAttack(LivingPirates[i], game) && x <= count)
                     {
-                        // Get the first island
-                        game.Debug(ClosestCity(game)[j]);
-                        Location destination = ClosestCity(game)[j];
                         // Get sail options
                         List<Location> sailOptions = game.GetSailOptions(LivingPirates[i], destination);
                         // Set sail!
                         game.SetSail(LivingPirates[i], sailOptions[0]);
                         // Print a message
                         game.Debug("pirate " + LivingPirates[i] + " sails to " + sailOptions[0]);
+                        if (sailOptions[i] == LivingPirates[i].GetLocation())
+                        {
+                            destination = SortIsland(game, Cities[j])[x + 1];
+                        }
+                        else
+                            x++;
                     }
+                    
                 }
+
             }
-            
+
         }
 
 
@@ -107,4 +118,5 @@ namespace MyBot
             HandleDrones(game);
         }
     }
+
 }
