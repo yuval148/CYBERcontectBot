@@ -22,6 +22,7 @@ namespace MyBot
             }
             return loc;
         }
+
         private List<Location> ClosestCityEnemy(PirateGame game)
         {
             List<Location> loc = new List<Location>();
@@ -41,22 +42,22 @@ namespace MyBot
         }
         private void HandlePirates(PirateGame game)
         {
-            List<Pirate> l = game.GetMyLivingPirates();
+            List<Pirate> LivingPirates = game.GetMyLivingPirates();
             for (int j = 0; j < game.GetMyCities().Count; j++)
             {
-                for (int i = 0; i < l.Count; i++)
+                for (int i = 0; i < LivingPirates.Count; i++)
                 {
-                    if (!TryAttack(l[i], game))
+                    if (!TryAttack(LivingPirates[i], game))
                     {
                         // Get the first island
                         game.Debug(ClosestCity(game)[j]);
                         Location destination = ClosestCity(game)[j];
                         // Get sail options
-                        List<Location> sailOptions = game.GetSailOptions(l[i], destination);
+                        List<Location> sailOptions = game.GetSailOptions(LivingPirates[i], destination);
                         // Set sail!
-                        game.SetSail(l[i], sailOptions[0]);
+                        game.SetSail(LivingPirates[i], sailOptions[0]);
                         // Print a message
-                        game.Debug("pirate " + l[i] + " sails to " + sailOptions[0]);
+                        game.Debug("pirate " + LivingPirates[i] + " sails to " + sailOptions[0]);
                     }
                 }
             }
