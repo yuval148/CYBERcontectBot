@@ -5,9 +5,9 @@ namespace MyBot
 {
     public class MyBot : Pirates.IPirateBot
     {
-        private List<Location> ClosestCity(PirateGame game)
+        private void ClosestCity(PirateGame game)
         {
-            List<Location> loc = new List<Location>();
+            List<Location> list;
             for (int i = 0; i < game.GetMyCities().Count; i++)
             {
                 Location Min = game.GetAllIslands()[0].Location;
@@ -17,50 +17,27 @@ namespace MyBot
                     {
                         Min = game.GetAllIslands()[v].Location;
                     }
+                    list[v] = game.GetAllIslands()[v].Location;
                 }
-                loc.Add(Min);
-            }
-            return loc;
-        }
-        private List<Location> ClosestCityEnemy(PirateGame game)
-        {
-            List<Location> loc = new List<Location>();
-            for (int i = 0; i < game.GetEnemyCities().Count; i++)
-            {
-                Location Min = game.GetAllIslands()[0].Location;
-                for (int v = 0; v < game.GetAllIslands().Count; v++)
-                {
-                    if (game.GetEnemyCities()[i].Distance(game.GetAllIslands()[v]) < game.GetEnemyCities()[i].Distance(Min))
-                    {
-                        Min = game.GetAllIslands()[v].Location;
-                    }
-                }
-                loc[i] = Min;
-            }
-            return loc;
+            } 
         }
         private void HandlePirates(PirateGame game)
         {
-            List<Pirate> l = game.GetMyLivingPirates();
-            for (int j = 0; j < game.GetMyCities().Count; j++)
+            // Go over all of my pirates
+            foreach (Pirate pirate in game.GetMyLivingPirates())
             {
-                for (int i = 0; i < l.Count; i++)
+                if (!TryAttack(pirate, game))
                 {
-                    if (!TryAttack(l[i], game))
-                    {
-                        // Get the first island
-                        game.Debug(ClosestCity(game)[j]);
-                        Location destination = ClosestCity(game)[j];
-                        // Get sail options
-                        List<Location> sailOptions = game.GetSailOptions(l[i], destination);
-                        // Set sail!
-                        game.SetSail(l[i], sailOptions[0]);
-                        // Print a message
-                        game.Debug("pirate " + l[i] + " sails to " + sailOptions[0]);
-                    }
+                    // Get the first island
+                    Island destination = game.GetAllIslands()[0];
+                    // Get sail options
+                    List<Location> sailOptions = game.GetSailOptions(pirate, destination);
+                    // Set sail!
+                    game.SetSail(pirate, sailOptions[0]);
+                    // Print a message
+                    game.Debug("pirate " + pirate + " sails to " + sailOptions[0]);
                 }
             }
-            
         }
 
 
